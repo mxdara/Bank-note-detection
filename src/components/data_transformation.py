@@ -70,8 +70,8 @@ class DataTransformation:
                 f"Applying preprocessing object on training dataframe and testing dataframe."
             )
             
-            input_feature_train_arr  = preprocessing_obj.fit_transform(input_features_train_df)
-            input_feature_test_arr = preprocessing_obj.fit_transform(input_feature_test_df)
+            input_feature_train_arr  = preprocessing_obj.fit_transform(input_features_train_df).astype(float)
+            input_feature_test_arr = preprocessing_obj.fit_transform(input_feature_test_df).astype(float)
             
             train_arr = np.c_[input_feature_train_arr, np.array(target_features_test_df, dtype=float)]
             test_arr = np.c_[input_feature_test_arr, np.array(target_features_test_df, dtype=float)]
