@@ -9,8 +9,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 
-from components.data_transformation import DataTransformation, DataTransformationConfig
-from components.model_trainer import ModelTrainerConfig, ModelTrainer
+from components.data_transformation import DataTransformation
+from components.model_trainer import ModelTrainer
 
 
 @dataclass
@@ -30,19 +30,19 @@ class DataIngestion:
             df = pd.read_csv('/Users/sameer/Documents/GitHub/Bank-note-detection/notebook/BankNote_Authentication.csv')
             logging.info('Read the dataset as dataframe')
             
-            os.makedirs(os.path.dirname(self.ingestion_congfig.train_data_path),exist_ok=True)
+            os.makedirs(os.path.dirname(self.ingestion_config.train_data_path),exist_ok=True)
             
-            df.to_csv(self.ingestion_congfig.raw_data_path,index=False,header=True)
+            df.to_csv(self.ingestion_config.raw_data_path,index=False,header=True)
             
             logging.info("Train Test split initiated")
             train_set,test_set=train_test_split(df,test_size=0.2,random_state=42)
-            train_set.to_csv(self.ingestion_congfig.train_data_path,index=False,header=True)
-            test_set.to_csv(self.ingestion_congfig.test_data_path,index=False,header=True)
+            train_set.to_csv(self.ingestion_config.train_data_path,index=False,header=True)
+            test_set.to_csv(self.ingestion_config.test_data_path,index=False,header=True)
             
             logging.info("Data ingestion complete")
             
             return(
-                self.ingestion_congfig.train_data_path,
+                self.ingestion_config.train_data_path,
                 self.ingestion_config.test_data_path
             )
             
@@ -51,13 +51,10 @@ class DataIngestion:
         
 if __name__=="__main__":
     obj=DataIngestion()
-    train_data,test_data=obj.initiate_data_ingestion()
+    train_file_path,test_file_path=obj.initiate_data_ingestion()
     
     data_transformation = DataTransformation()
-    train_arr, test_arr, _ = data_transformation.initiate_data_transformation(train_data, test_data)
+    train_arr, test_arr, _ = data_transformation.initiate_data_transformation(train_file_path, test_file_path)
     
     modeltrainer = ModelTrainer()
     print(modeltrainer.initiate_model_trainer(train_arr,test_arr))
-    
-
-
